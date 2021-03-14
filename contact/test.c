@@ -7,7 +7,7 @@ void menu()
 	printf("************  1.add               2.del         ***********\n");
 	printf("************  3.search            4.modify      ***********\n");
 	printf("************  5.show              6.sort        ***********\n");
-	printf("************  0.exit                            ***********\n");
+	printf("************  7.init              0.exit        ***********\n");
 	printf("***********************************************************\n");
 }
 
@@ -42,6 +42,12 @@ int main()
 			break;
 		case SORT:
 			SortContact(&con);
+			break;
+		case INIT:
+			InitContact(&con);
+			printf("初始化通讯录成功\n");
+			Sleep(1000);
+			system("cls");
 			break;
 		case EXIT:
 			printf("退出通讯录\n");

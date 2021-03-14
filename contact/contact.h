@@ -19,7 +19,8 @@ enum Option
 	SEARCH,
 	MODIFY,
 	SHOW,
-	SORT
+	SORT,
+	INIT
 };
 
 //联系人信息
