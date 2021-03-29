@@ -23,13 +23,17 @@ void CheckCapacity(Contact* pc)
 		if (ptr == NULL)
 		{
 			printf("%s\n", strerror(errno));
-			//printf("增容失败\n");
+#ifdef DEBUG
+			printf("增容失败\n");
+#endif // DEBUG
 		}
 		else
 		{
 			pc->data = ptr;
 			pc->capacity += 2;
-			//printf("增容成功\n");
+#ifdef DEBUG
+			printf("增容成功\n");
+#endif // DEBUG
 		}
 	}
 }
@@ -59,6 +63,7 @@ void AddContact(Contact* pc)
 	Sleep(1000);
 	system("cls");
 }
+
 //打印通讯录
 void ShowContact(const Contact* pc)
 {
@@ -83,7 +88,8 @@ void ShowContact(const Contact* pc)
 	}
 }
 
-static int FindByName(const Contact* pc, char name[MAX_Name])
+//查找指定联系人
+static int FindByName(const Contact* pc, char name[MAX_NAME])
 {
 	assert(pc);
 	int i = 0;
@@ -94,11 +100,12 @@ static int FindByName(const Contact* pc, char name[MAX_Name])
 	}
 	return -1;//找不到返回-1
 } 
+
 //删除指定联系人信息
 void DelContact(Contact* pc)
 {
 	assert(pc);
-	char name[MAX_Name];
+	char name[MAX_NAME];
 	printf("请输入要删除的联系人姓名:>");
 	scanf("%s", name);
 	//查找联系人位置
@@ -117,11 +124,12 @@ void DelContact(Contact* pc)
 		system("cls");
 	}
 }
+
 //查找联系人
 void SearchContact(const Contact* pc)
 {
 	assert(pc);
-	char name[MAX_Name];
+	char name[MAX_NAME];
 	printf("请输入要查找的联系人姓名:>");
 	scanf("%s", name);
 	int poc=FindByName(pc, name);
@@ -137,11 +145,12 @@ void SearchContact(const Contact* pc)
 			pc->data[poc].addr);
 	}
 }
+
 //修改指定联系人信息
 void ModifyContact(Contact* pc)
 {
 	assert(pc);
-	char name[MAX_Name];
+	char name[MAX_NAME];
 	printf("请输入要修改的联系人名字:>");
 	scanf("%s", &name);
 	int poc=FindByName(pc, name);
@@ -166,10 +175,10 @@ void ModifyContact(Contact* pc)
 	}
 }
 
-int cmp(const void* e1, const void* e2)
+int cmp_name(const void* e1, const void* e2)
 {
 	assert(e1 && e2);
-	return strcmp(((Contact*)e1)->data->name , ((Contact*)e2)->data->name);
+	return strcmp(((PeoInFo*)e1)->name , ((PeoInFo*)e2)->name);
 }
 
 void Swap(char* p1, char* p2, int width)
@@ -185,7 +194,7 @@ void Swap(char* p1, char* p2, int width)
 	}
 }
 
-void bubble_sort(void* base, int num, int width, int (*cmp)(void* e1, void* e2))
+void bubble_sort(void* base, int num, int width, int (*cmp_name)(const void* e1, const void* e2))
 {
 	assert(base);
 	int i, j;
@@ -194,7 +203,7 @@ void bubble_sort(void* base, int num, int width, int (*cmp)(void* e1, void* e2))
 		for (j = 0; j < num - 1 - i; j++)
 		{
 			//两个元素比较
-			if (cmp((char*)base + j * width, (char*)base + (j + 1) * width) > 0)
+			if (cmp_name((char*)base + j * width, (char*)base + (j + 1) * width) > 0)
 			{
 				//交换
 				Swap((char*)base + j * width, (char*)base + (j + 1) * width, width);
@@ -202,15 +211,17 @@ void bubble_sort(void* base, int num, int width, int (*cmp)(void* e1, void* e2))
 		}
 	}
 }
+
 //排序通讯录内容
 void SortContact(Contact* pc)
 {
 	//冒泡排序
-	bubble_sort(pc->data, pc->size, sizeof(pc->data[0]), cmp);
+	bubble_sort(pc->data, pc->size, sizeof(pc->data[0]), cmp_name);
 	//打印通讯录
 	ShowContact(pc);
 }
 
+//释放动态内存开辟的内存
 void DestoryContact(Contact* pc)
 {
 	free(pc->data);
